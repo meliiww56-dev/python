@@ -27,6 +27,7 @@ TCP: 提供 可靠 (Reliable) 且 有序 (Ordered) 的資料傳輸服務，非�
 	編碼：UTF-8 文字字串 (String)
 	客戶端 → 伺服器：使用者輸入的訊息
 範例：
+
 <img width="413" height="155" alt="image" src="https://github.com/user-attachments/assets/5e41ca8a-7b6a-4180-a699-e1e5dbf2a78d" />
 
 
@@ -42,6 +43,7 @@ TCP: 提供 可靠 (Reliable) 且 有序 (Ordered) 的資料傳輸服務，非�
 
 	伺服器 → 客戶端（廣播）：在訊息前加上來源資訊 [IP:Port]
 範例：
+
 <img width="513" height="139" alt="image" src="https://github.com/user-attachments/assets/0aa2b261-39b6-45c5-b11a-1cd964fa9dfb" />
 
 
