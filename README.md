@@ -32,6 +32,14 @@ TCP: 提供 可靠 (Reliable) 且 有序 (Ordered) 的資料傳輸服務，非�
 
 
 
+
+
+
+
+
+
+
+
 	伺服器 → 客戶端（廣播）：在訊息前加上來源資訊 [IP:Port]
 範例：
 <img width="513" height="139" alt="image" src="https://github.com/user-attachments/assets/0aa2b261-39b6-45c5-b11a-1cd964fa9dfb" />
@@ -40,8 +48,26 @@ TCP: 提供 可靠 (Reliable) 且 有序 (Ordered) 的資料傳輸服務，非�
 
 
 
+
+
+
+
+
+
+
+
+
 	回覆範例：
 <img width="961" height="98" alt="image" src="https://github.com/user-attachments/assets/06fe0e4e-fb68-4678-8964-efa5644acab1" />
+
+
+
+
+
+
+
+
+
 
 
 
@@ -66,9 +92,33 @@ TCP: 提供 可靠 (Reliable) 且 有序 (Ordered) 的資料傳輸服務，非�
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 3.	啟動客戶端
 •	開啟第二個（或更多）終端機 / CMD
 <img width="541" height="133" alt="image" src="https://github.com/user-attachments/assets/09af339c-f269-4f86-9d0e-d2ed6b2af7dd" />
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -86,6 +136,10 @@ TCP: 提供 可靠 (Reliable) 且 有序 (Ordered) 的資料傳輸服務，非�
 •	伺服器顯示廣播訊息及當前連線數
 •	客戶端顯示訊息及來源 IP/Port
 
+
+
+
+Python 伺服器程式 (chat_server.py)
 import socket
 import threading
 
@@ -115,23 +169,7 @@ def handle_client(conn, addr):
     welcome_msg = f"[SERVER] Client {addr} has joined the chat.\n".encode('utf-8')
     broadcast(welcome_msg, conn)
 
-    while True:
-        try:
-            data = conn.recv(1024)
-            if data:
-                full_message = f"[{addr[1]}] {data.decode('utf-8').strip()}".encode('utf-8')
-                print(f"Broadcasting: {full_message.decode('utf-8')}")
-                broadcast(full_message, conn)
-            else:
-                break
-        except Exception as e:
-            print(f"[ERROR] Connection error {addr}: {e}")
-            break
-
-    remove_client(conn)
-    print(f"[DISCONNECTED] {addr} disconnected")
-    disconnect_msg = f"[SERVER] Client {addr} has left the chat.\n".encode('utf-8')
-    broadcast(disconnect_msg, None)
+   
 
 
 def remove_client(conn):
@@ -164,26 +202,137 @@ def start_server():
     server.listen()
     print(f"[LISTENING] Server is listening on {HOST}:{PORT}...")
 
-    # Start a thread to allow server to send messages manually
-    threading.Thread(target=server_write_messages, daemon=True).start()
-
-    while True:
-        try:
-            conn, addr = server.accept()
-            with client_lock:
-                clients.append(conn)
-            threading.Thread(target=handle_client, args=(conn, addr), daemon=True).start()
-            print(f"[ACTIVE CONNECTIONS] Current connections: {threading.active_count() - 2}")  # subtract main + server input threads
-        except Exception as e:
-            print(f"[ERROR] Server error: {e}")
-
+   
 
 if __name__ == "__main__":
     start_server()
 
 
+Python 客戶端程式 (chat_client.py)
+
+import socket
+import threading
+import sys
+
+# =========================
+# CONFIGURATION
+# =========================
+# Use the server's actual IP address if connecting from another computer
+HOST = '192.168.250.209'  # <-- replace with your server's LAN IP
+PORT = 65432
+
+# Create TCP socket
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# =========================
+# FUNCTION TO RECEIVE MESSAGES
+# =========================
+def receive_messages():
+    while True:
+        try:
+            message = client.recv(1024).decode('utf-8')
+            if message:
+                # Print received message
+                sys.stdout.write(message)
+                sys.stdout.flush()
+            else:
+                print("\n[DISCONNECTED] Server closed the connection.")
+                client.close()
+                break
+        except Exception as e:
+            print(f"\n[ERROR] Connection error: {e}")
+            client.close()
+            break
+
+# =========================
+# FUNCTION TO SEND MESSAGES
+# =========================
+def send_messages():
+    while True:
+        try:
+            msg = input()  # User input
+            client.send(msg.encode('utf-8'))  # Send to server
+        except Exception as e:
+            print(f"[ERROR] Sending message failed: {e}")
+            client.close()
+            break
+
+# =========================
+# START CLIENT CONNECTION
+# =========================
+def start_client():
+    try:
+        client.connect((HOST, PORT))
+        print(f"[CONNECTED] Connected to server {HOST}:{PORT}\n")
+
+       
+
+if __name__ == "__main__":
+    start_client()
 
 
 
+
+
+
+
+
+<img width="995" height="703" alt="image" src="https://github.com/user-attachments/assets/de56252a-9b62-4816-b24c-bc8cdfcf1013" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<img width="956" height="363" alt="image" src="https://github.com/user-attachments/assets/da7f7fb9-e405-499a-b2ab-f607f75e1917" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+未來改進方向
+1.	增加使用者名稱（Username）登入功能
+目前系統以顯示使用者的 IP 與 Port 作為識別方式，未來可新增使用者名稱登入機制，讓聊天室顯示更直觀，也提升使用者體驗。
+2.	實作私人訊息（Private Message）功能
+未來可加入私訊功能，允許使用者指定特定對象進行一對一聊天，而非僅限於公開聊天室廣播。
+3.	採用非阻塞 I/O 技術以提升效能
+目前系統使用 threading 處理多用戶連線，未來可考慮使用 select 或 asyncio 等非阻塞 I/O 技術，以提升在高併發連線情況下的效能與穩定性。
+參考資料
+•	Foundations of Python Network Programming
+•	Python 官方文件：socket 與 threading 模組
 
 
