@@ -29,12 +29,23 @@ TCP: 提供 可靠 (Reliable) 且 有序 (Ordered) 的資料傳輸服務，非�
 範例：
 <img width="413" height="155" alt="image" src="https://github.com/user-attachments/assets/5e41ca8a-7b6a-4180-a699-e1e5dbf2a78d" />
 
+
+
+
 	伺服器 → 客戶端（廣播）：在訊息前加上來源資訊 [IP:Port]
 範例：
 <img width="513" height="139" alt="image" src="https://github.com/user-attachments/assets/0aa2b261-39b6-45c5-b11a-1cd964fa9dfb" />
 
+
+
+
+
 	回覆範例：
 <img width="961" height="98" alt="image" src="https://github.com/user-attachments/assets/06fe0e4e-fb68-4678-8964-efa5644acab1" />
+
+
+
+
 簡單、易解析、適合 terminal 即時聊天室使用。
 
 安裝與執行
@@ -51,9 +62,19 @@ TCP: 提供 可靠 (Reliable) 且 有序 (Ordered) 的資料傳輸服務，非�
 •	開啟第一個終端機 / CMD
 <img width="548" height="127" alt="image" src="https://github.com/user-attachments/assets/c3287609-1cd6-4918-9b37-1ff30c492465" />
 
+
+
+
+
 3.	啟動客戶端
 •	開啟第二個（或更多）終端機 / CMD
 <img width="541" height="133" alt="image" src="https://github.com/user-attachments/assets/09af339c-f269-4f86-9d0e-d2ed6b2af7dd" />
+
+
+
+
+
+
 
 4.	測試系統
 •	在任一客戶端輸入訊息並按 Enter
